@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<script src="{% static 'js/vanilla-tilt.js' %}"></script>
+
+<style>
+  body {
+    background-image: url("{% static 'bgimg2.jpg' %}");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+  }
+</style>
+
+<div class="container-fluid" style="display:flex; justify-content:center;align-items:center;height: 100vh;">
+  <div class="box" data-tilt style="width:400px; margin-top:20px; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; box-shadow:0 4px 12px rgba(0, 0, 0, 0.8); background: rgba(255, 255, 255, 0.2);border-radius:30px;backdrop-filter:blur(10px);">
+    <h2 style="font-weight:bold;">Add Your Destination</h2>
+
+    <form method="post" enctype="multipart/form-data" style="width:100%;">
+      {% csrf_token %}
+      <div class="form-group">
+        {{ form.as_p }}
+      </div>
+
+      <div style="display:flex; justify-content:space-between; margin-top:15px;">
+        <button type="submit" class="btn btn-primary">ADD</button>
+        <a class="btn btn-primary" href="/">Home</a>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
+            max: 10, // Maximum tilt angle
+            speed: 300, // Speed of the tilt
+        });
+    });
+</script>
+
+
+
+{% endblock %}

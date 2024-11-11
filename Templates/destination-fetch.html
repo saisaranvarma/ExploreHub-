@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    body {
+    background-image: url("{% static 'detail.jpg' %}");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+  }
+  .div1{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  }
+  .innerdiv{
+  background:rgba(255, 255, 255, 0.2);
+  border-radius:30px;
+  backdrop-filter:blur(10px);
+  box-shadow:0 4px 12px rgba(0, 0, 0, 0.8);
+  transition: transform 0.3s ease;
+  }
+  .innerdiv:hover{
+  filter: brightness(1.2);
+  transform: translateY(-5px);
+  }
+
+</style>
+
+
+
+<div class="container-fluid">
+
+    <a class="btn btn-primary" href="/" role="button" style="margin-top:40px;">HOME</a>
+    <div class="row div1">
+        <div class="col-6 innerdiv">
+            {% if destination %}
+            <h2 style="color:black">{{destination.Description}}</h2>
+            {% endif %}
+
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}

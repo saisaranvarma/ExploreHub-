@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    body{
+    background-image: url("{% static 'clouds.jpg' %}");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    }
+</style>
+
+<div class="container mt-5">
+    <h2>Update Destination</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% if Destination %}
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" name="Name" class="form-control" id="name" value="{{ Destination.Name }}">
+        </div>
+
+        <div class="mb-3">
+    <label for="weather" class="form-label">Weather</label>
+    <select name="Weather" class="form-control" id="weather">
+        {% for value, label in weather_choices %}
+            <option value="{{ value }}" {% if value == Destination.Weather %}selected{% endif %}>
+                {{ label }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+
+
+
+        <div class="mb-3">
+            <label for="state" class="form-label">State</label>
+            <input type="text" name="State" class="form-control" id="state" value="{{ Destination.State }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="district" class="form-label">District</label>
+            <input type="text" name="District" class="form-control" id="district" value="{{ Destination.District }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="links" class="form-label">Google Maps Link</label>
+            <input type="url" name="Google_Maps_Link" class="form-control" id="links" value="{{ Destination.Google_Maps_Link }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea name="Description" class="form-control" id="description">{{ Destination.Description }}</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="explore_img" class="form-label">Image</label>
+            <input type="file" name="explore_img" class="form-control" id="explore_img">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a class="btn btn-primary" href="/">Home</a>
+
+
+        {% endif %}
+    </form>
+</div>
+
+{% endblock %}

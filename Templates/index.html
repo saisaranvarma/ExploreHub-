@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  body {
+    background-image: url("{% static 'bgimg3.jpg' %}");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+  }
+  .card-img-top {
+    object-fit: cover;
+    width: 100%;
+    height: auto;
+    border-radius:20px;
+
+
+
+  }
+  .card{
+  background:#FFBCB3;
+  border-radius:20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+
+  }
+  .card:hover{
+
+  filter: brightness(1.2);
+  transform: translateY(-5px);
+
+  }
+  .btn-gap{
+  margin-right: 300px;
+  }
+
+</style>
+
+<nav class="navbar navbar-expand-lg  ">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/" style="color:red;font-weight:bold;">ExploreHub</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="create_destination/">Add</a>
+        </li>
+      </ul>
+      <form method="POST" class="ms-auto">
+       {% csrf_token %}
+       <input type="text" name="search" placeholder="Search for destinations.." required>
+       <button class="btn btn-primary" style="border:1px solid blue;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+
+<h1 style="text-align:center;margin-top:10px;color:grey;text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);">Available <span style="color:black;text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);"> Destinations</span></h1>
+
+{% if data %}
+  <div class="container-fluid d-flex flex-wrap" style="justify-content:center;">
+    {% for destination in data %}
+      <div class="card" style="width: 18rem;">
+        <img src="{{ destination.explore_img }}" class="card-img-top" alt="{{ destination.Name }}"  style="object-fit: cover;height: 200px; ">
+        <div class="card-body">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal{{ destination.id }}" style="position: absolute; top: 10px; right: 10px; color: red; font-size: 20px;">
+  <i class="fas fa-times"></i> <!-- Font Awesome "X" Icon -->
+</a>
+
+          <h5 class="card-title">{{ destination.Name }}</h5>
+          <p class="card-text">Weather: {{ destination.get_Weather_display }}</p>
+          <p class="card-text">State: {{ destination.State }}</p>
+          <p class="card-text">District: {{ destination.District }}</p>
+          <p class="card-text">Google Map: <a href="{{ destination.Google_Maps_Link }}" target="_blank">{{ destination.Google_Maps_Link }}</a></p>
+
+          <div class="container-fluid">
+             <a class="btn btn-primary" href="/destination_fetch/{{ destination.id }}" role="button" style="margin-top:40px;">Details</a>
+             <a class="btn btn-primary" href="/update_destination/{{ destination.id }}" role="button" style="margin-top:40px;">Update</a>
+          </div>
+        </div>
+      </div>
+    <!-- Modal for delete confirmation -->
+      <div class="modal fade" id="deleteModal{{ destination.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Delete Destination</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <h3 style="font-size:16px;">Do you want to delete {{ destination.Name }}?</h3>
+            </div>
+            <div class="modal-footer">
+              <a href="/destination_delete/{{ destination.id }}" class="btn btn-danger">Delete</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+
+
+{% elif recipes %}
+  <div class="container-fluid d-flex flex-wrap" style="justify-content:center;gap: 30px;">
+    {% for recipe in recipes.object_list %}
+      <div class="card" style="width: 18rem;margin: 10px;">
+        <img src="{{ recipe.explore_img }}" class="card-img-top" alt="{{ recipe.Name }}" style="object-fit: cover;height: 200px; ">
+        <div class="card-body">
+          <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal{{ recipe.id }}" style="position: absolute; top: 10px; right: 10px; color: red; font-size: 20px;">
+        <i class="fas fa-times"></i>
+      </a>
+          <h5 class="card-title">{{ recipe.Name }}</h5>
+          {% if recipe.Weather == 1 %}
+            <p class="card-text">Weather: Sunny</p>
+          {% elif recipe.Weather == 2 %}
+            <p class="card-text">Weather: Rainy</p>
+          {% elif recipe.Weather == 3 %}
+            <p class="card-text">Weather: Cloudy</p>
+          {% else %}
+            <p class="card-text">Weather: Cold</p>
+          {% endif %}
+          <p class="card-text">State: {{ recipe.State }}</p>
+          <p class="card-text">District: {{ recipe.District }}</p>
+          <p class="card-text">Google Map: <a href="{{ recipe.Google_Maps_Link }}" target="_blank">{{ recipe.Google_Maps_Link }}</a></p>
+
+          <div class="container-fluid">
+             <a class="btn btn-primary" href="/destination_fetch/{{ recipe.id }}" role="button" style="margin-top:40px;">Details</a>
+             <a class="btn btn-primary" href="/update_destination/{{ recipe.id }}" role="button" style="margin-top:40px;">Update</a>
+          </div>
+
+        </div>
+
+      </div>
+    <!-- Modal for delete confirmation -->
+      <div class="modal fade" id="deleteModal{{ recipe.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Delete Destination</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <h3 style="font-size:16px;">Do you want to delete {{ recipe.Name }}?</h3>
+            </div>
+            <div class="modal-footer">
+              <a href="/destination_delete/{{ recipe.id }}" class="btn btn-danger">Delete</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No Destinations found.</p>
+{% endif %}
+
+<div class="mx-auto" style="margin-bottom:38px;">
+  {% if recipes.paginator.num_pages > 1 %}
+    <div class="text-center">
+      {% for pg in recipes.paginator.page_range %}
+        <a href="?page={{ pg }}" class="btn btn-primary btn-sm {% if recipes.number == pg %} active {% endif %}">
+          {{ pg }}
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+
+
+{% endblock %}
